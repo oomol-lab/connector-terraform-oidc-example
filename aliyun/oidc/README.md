@@ -54,6 +54,14 @@ terraform apply
 After apply, put the `roleArn` and `oidcProviderArn` outputs into
 `oomol-connector` to finish the OIDC integration.
 
+Field mapping:
+
+| Terraform value or output | `oomol-connector` field |
+| --- | --- |
+| `oidc_client_id` | Alibaba Cloud STS `audience` |
+| `oidcProviderArn` | Alibaba Cloud STS `OIDC Provider ARN` |
+| `roleArn` | `RoleARN` |
+
 ```sh
 terraform output roleArn
 terraform output oidcProviderArn
@@ -117,6 +125,14 @@ terraform apply
 
 `apply` 完成后，把 `roleArn` 和 `oidcProviderArn` 输出值填到 `oomol-connector` 里，
 完成 OIDC 对接。
+
+字段映射：
+
+| Terraform 值或输出 | `oomol-connector` 字段 |
+| --- | --- |
+| `oidc_client_id` | Aliyun Cloud STS 的 `audience` |
+| `oidcProviderArn` | Aliyun Cloud STS 的 `OIDC Provider ARN` |
+| `roleArn` | `RoleARN` |
 
 ```sh
 terraform output roleArn
