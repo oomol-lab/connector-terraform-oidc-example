@@ -32,3 +32,9 @@ Before production use, replace `subject` with the final OOMOL `sub` claim value
 and keep `allowed_audiences` aligned with the token `aud` claim. The service
 account will still need project or resource-level IAM roles for the Google APIs
 it should access.
+
+## Reference documentation
+
+- [Google Cloud IAM: Workload Identity Federation](https://docs.cloud.google.com/iam/docs/workload-identity-federation)
+- [Google Cloud IAM: Workload Identity Federation with deployment pipelines](https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines)
+- [Terraform Google provider: google_iam_workload_identity_pool_provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider)

@@ -33,3 +33,9 @@ terraform plan \
 Before production use, replace `subject_patterns` with the final OOMOL `sub`
 claim format and verify whether you want AWS to retrieve the HTTPS thumbprint
 automatically or pass an explicit `thumbprint_list`.
+
+## Reference documentation
+
+- [AWS IAM: Create OpenID Connect identity providers](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html)
+- [AWS STS API: AssumeRoleWithWebIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html)
+- [Terraform AWS provider: aws_iam_openid_connect_provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider)

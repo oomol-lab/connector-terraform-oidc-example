@@ -62,6 +62,11 @@ terraform output oidcProviderArn
 The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 `alicloud_profile` if you need a different region or local CLI profile.
 
+## Reference documentation
+
+- [Alibaba Cloud RAM: OIDC role-based SSO overview](https://www.alibabacloud.com/help/en/ram/overview-of-oidc-based-sso)
+- [Alibaba Cloud RAM API: AssumeRoleWithOIDC](https://www.alibabacloud.com/help/en/doc-detail/371866.html)
+
 # 阿里云 OIDC 示例
 
 这个示例用于创建 OOMOL OIDC 联邦登录所需的阿里云侧资源。
@@ -120,3 +125,8 @@ terraform output oidcProviderArn
 
 provider 默认使用 `cn-hangzhou` 区域。如果需要其他区域或本地 CLI profile，请覆盖
 `alicloud_region` 和 `alicloud_profile`。
+
+## 参考文档
+
+- [阿里云 RAM：OIDC 角色 SSO 概览](https://www.alibabacloud.com/help/en/ram/overview-of-oidc-based-sso)
+- [阿里云 RAM API：AssumeRoleWithOIDC](https://www.alibabacloud.com/help/en/doc-detail/371866.html)
