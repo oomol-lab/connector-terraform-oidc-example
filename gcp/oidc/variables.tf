@@ -21,16 +21,16 @@ variable "oidc_issuer_uri" {
   default     = "https://api.oomol.com"
 }
 
-variable "allowed_audiences" {
-  description = "Allowed OIDC audiences. These values must match the token aud claim."
-  type        = list(string)
-  default     = ["oomol"]
+variable "audience" {
+  description = "Allowed OIDC audience. This value must match the token aud claim."
+  type        = string
+  default     = "replace-with-your-oomol-audience"
 }
 
 variable "subject" {
-  description = "OIDC sub claim allowed to impersonate the service account. Replace this with the final OOMOL subject value."
+  description = "OOMOL user UUID from the OIDC sub claim allowed to impersonate the service account."
   type        = string
-  default     = "oomol"
+  default     = "replace-with-your-oomol-user-uuid"
 }
 
 variable "service_account_id" {

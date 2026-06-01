@@ -19,7 +19,7 @@ resource "google_iam_workload_identity_pool_provider" "oomol" {
 
   oidc {
     issuer_uri        = var.oidc_issuer_uri
-    allowed_audiences = var.allowed_audiences
+    allowed_audiences = [var.audience]
   }
 
   attribute_mapping = {

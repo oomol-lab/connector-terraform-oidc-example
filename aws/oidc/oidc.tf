@@ -4,7 +4,7 @@ locals {
 
 resource "aws_iam_openid_connect_provider" "oomol" {
   url             = var.oidc_issuer_url
-  client_id_list  = var.client_ids
+  client_id_list  = [var.audience]
   thumbprint_list = var.thumbprint_list
 
   tags = merge(var.tags, {
@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "oomol_assume_role" {
     condition {
       test     = "StringEquals"
       variable = "${local.oidc_condition_key_prefix}:aud"
-      values   = var.client_ids
+      values   = [var.audience]
     }
 
     condition {

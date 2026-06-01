@@ -13,33 +13,67 @@ The AWS equivalent of Alibaba Cloud OIDC is:
 
 ## Usage
 
+Before running Terraform, update the user-specific values.
+
+Values you must review:
+
+| Value | Replace it? | What to use |
+| --- | --- | --- |
+| `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
+| `oidc_issuer_url` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
+| `subject_patterns` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. Use a list of UUIDs if more than one OOMOL user should be allowed. |
+| `thumbprint_list` | Usually no. | Leave `null` to let AWS retrieve the HTTPS thumbprint. Set it only if you need to pin explicit certificate thumbprints. |
+
+For example, create `terraform.tfvars`:
+
+```hcl
+audience         = "replace-with-your-oomol-audience"
+subject_patterns = ["replace-with-your-oomol-user-uuid"]
+```
+
+Then run:
+
 ```sh
 terraform init
 terraform plan
 terraform apply
-terraform output
 ```
 
-Override variables as needed:
+Override AWS environment values as needed:
 
 ```sh
 terraform plan \
   -var='aws_profile=default' \
-  -var='oidc_issuer_url=https://api.oomol.com' \
-  -var='client_ids=["oomol-connector-for-aws"]' \
-  -var='subject_patterns=["oomol:*"]'
+  -var='aws_region=us-east-1'
 ```
 
-When configuring an AWS OIDC connector, use the `role_arn` output as the AWS
-role to assume. Do not pass `oidc_provider_arn` to an Alibaba Cloud
+Do not leave `subject_patterns` as `["*"]` or any other broad wildcard in
+production. The IAM role must check the token `sub` claim; otherwise anyone who
+can obtain a valid OOMOL token and knows this role could try to assume it.
+
+After apply, put the `role_arn` output into `oomol-connector` to finish the OIDC
+integration.
+
+Field mapping:
+
+| Terraform value or output | `oomol-connector` field |
+| --- | --- |
+| `audience` | AWS OIDC `audience` |
+| `role_arn` | AWS Role ARN to assume |
+
+```sh
+terraform output role_arn
+```
+
+The `oidc_provider_arn` output is the AWS IAM OIDC provider ARN created for the
+role trust policy. Do not put it into an Alibaba Cloud
 `AssumeRoleWithOIDC`/`OIDCProviderArn` setting: Alibaba Cloud expects a RAM OIDC
 provider ARN in the `acs:ram::...:oidc-provider/...` format, while this example
 creates an AWS IAM provider ARN in the `arn:aws:iam::...:oidc-provider/...`
 format.
 
-Before production use, replace `subject_patterns` with the final OOMOL `sub`
-claim format and verify whether you want AWS to retrieve the HTTPS thumbprint
-automatically or pass an explicit `thumbprint_list`.
+The role created here only defines who may assume it. Attach the concrete IAM
+permissions OOMOL needs in your deployment before using it for real workloads.
 
 ## Reference documentation
 

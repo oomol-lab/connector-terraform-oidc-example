@@ -16,10 +16,10 @@ variable "oidc_issuer_url" {
   default     = "https://api.oomol.com"
 }
 
-variable "client_ids" {
-  description = "Allowed audiences. These values must match the token aud claim."
-  type        = list(string)
-  default     = ["oomol"]
+variable "audience" {
+  description = "Allowed OIDC audience. This value must match the token aud claim."
+  type        = string
+  default     = "replace-with-your-oomol-audience"
 }
 
 variable "thumbprint_list" {
@@ -35,9 +35,9 @@ variable "role_name" {
 }
 
 variable "subject_patterns" {
-  description = "Allowed OIDC sub claim patterns. Tighten this to the final OOMOL subject format before production use."
+  description = "Allowed OIDC sub claim values or patterns. Use exact OOMOL user UUIDs in production."
   type        = list(string)
-  default     = ["*"]
+  default     = ["replace-with-your-oomol-user-uuid"]
 }
 
 variable "max_session_duration" {

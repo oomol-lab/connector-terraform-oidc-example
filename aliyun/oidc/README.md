@@ -20,7 +20,7 @@ Values you must review:
 
 | Value | Replace it? | What to use |
 | --- | --- | --- |
-| `oidc_client_id` | Yes. | Your OOMOL OIDC client ID. Configure the same value in `oomol-connector`. It must match the token `aud` claim. |
+| `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
 | `oidc_issuer_url` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
 | `oidc_subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
 
@@ -28,7 +28,7 @@ The Terraform file marks the same values in the `locals` block:
 
 ```hcl
 locals {
-  oidc_client_id  = "replace-with-your-oomol-client-id"
+  audience        = "replace-with-your-oomol-audience"
   oidc_issuer_url = "https://api.oomol.com"
   oidc_subject    = "replace-with-your-oomol-user-uuid"
 }
@@ -58,7 +58,7 @@ Field mapping:
 
 | Terraform value or output | `oomol-connector` field |
 | --- | --- |
-| `oidc_client_id` | Alibaba Cloud STS `audience` |
+| `audience` | Alibaba Cloud STS `audience` |
 | `oidcProviderArn` | Alibaba Cloud STS `OIDC Provider ARN` |
 | `roleArn` | `RoleARN` |
 
@@ -94,7 +94,7 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 
 | 值 | 是否需要替换 | 应该填什么 |
 | --- | --- | --- |
-| `oidc_client_id` | 需要替换。 | 你的 OOMOL OIDC client ID，并在 `oomol-connector` 里配置同一个值。它必须匹配 token 的 `aud` claim。 |
+| `audience` | 需要替换。 | `oomol-connector` 里配置的 OOMOL OIDC audience。它必须匹配 token 的 `aud` claim。 |
 | `oidc_issuer_url` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
 | `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID，必须匹配 token 的 `sub` claim。 |
 
@@ -102,7 +102,7 @@ Terraform 文件里同样在 `locals` 配置块标出了这些值：
 
 ```hcl
 locals {
-  oidc_client_id  = "replace-with-your-oomol-client-id"
+  audience        = "replace-with-your-oomol-audience"
   oidc_issuer_url = "https://api.oomol.com"
   oidc_subject    = "replace-with-your-oomol-user-uuid"
 }
@@ -130,7 +130,7 @@ terraform apply
 
 | Terraform 值或输出 | `oomol-connector` 字段 |
 | --- | --- |
-| `oidc_client_id` | Aliyun Cloud STS 的 `audience` |
+| `audience` | Aliyun Cloud STS 的 `audience` |
 | `oidcProviderArn` | Aliyun Cloud STS 的 `OIDC Provider ARN` |
 | `roleArn` | `RoleARN` |
 

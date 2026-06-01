@@ -13,9 +13,9 @@ output "oidc_issuer_url" {
   value       = var.oidc_issuer_url
 }
 
-output "client_ids" {
-  description = "Client IDs expected in the OOMOL OIDC token aud claim."
-  value       = var.client_ids
+output "audience" {
+  description = "Audience expected in the OOMOL OIDC token aud claim."
+  value       = var.audience
 }
 
 output "subject_patterns" {

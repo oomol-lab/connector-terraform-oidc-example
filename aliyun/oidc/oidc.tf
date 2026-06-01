@@ -8,9 +8,9 @@ terraform {
 }
 
 locals {
-  # Replace this with your own OOMOL OIDC client ID. Configure the same value in
-  # oomol-connector. It must match the token aud claim.
-  oidc_client_id = "replace-with-your-oomol-client-id"
+  # Replace this with the OOMOL OIDC audience configured in oomol-connector.
+  # It must match the token aud claim.
+  audience = "replace-with-your-oomol-audience"
 
   # OOMOL's OIDC issuer URL. This value is fixed by OOMOL and normally should
   # not be changed. It must match the token iss claim exactly.
@@ -32,7 +32,7 @@ data "external" "oomol_oidc_fingerprint" {
 
 resource "alicloud_ims_oidc_provider" "oomol" {
   client_ids = [
-    local.oidc_client_id,
+    local.audience,
   ]
   fingerprints = [
     data.external.oomol_oidc_fingerprint.result.fingerprint,
@@ -61,7 +61,7 @@ resource "alicloud_ram_role" "oomol_oidc" {
         Condition = {
           StringEquals = {
             "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
-            "oidc:aud" = local.oidc_client_id
+            "oidc:aud" = local.audience
             "oidc:sub" = local.oidc_subject
           }
         }
