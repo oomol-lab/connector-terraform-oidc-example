@@ -26,9 +26,16 @@ Override variables as needed:
 terraform plan \
   -var='aws_profile=default' \
   -var='oidc_issuer_url=https://api.oomol.com' \
-  -var='client_ids=["oomol"]' \
+  -var='client_ids=["oomol-connector-for-aws"]' \
   -var='subject_patterns=["oomol:*"]'
 ```
+
+When configuring an AWS OIDC connector, use the `role_arn` output as the AWS
+role to assume. Do not pass `oidc_provider_arn` to an Alibaba Cloud
+`AssumeRoleWithOIDC`/`OIDCProviderArn` setting: Alibaba Cloud expects a RAM OIDC
+provider ARN in the `acs:ram::...:oidc-provider/...` format, while this example
+creates an AWS IAM provider ARN in the `arn:aws:iam::...:oidc-provider/...`
+format.
 
 Before production use, replace `subject_patterns` with the final OOMOL `sub`
 claim format and verify whether you want AWS to retrieve the HTTPS thumbprint
