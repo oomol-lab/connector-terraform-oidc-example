@@ -1,9 +1,9 @@
 output "roleArn" {
-  description = "ARN of the RAM role that accepts OOMOL OIDC tokens."
+  description = "ARN of the RAM role to configure in oomol-connector."
   value       = alicloud_ram_role.oomol_oidc.arn
 }
 
 output "oidcProviderArn" {
-  description = "ARN of the OIDC provider used by the RAM role."
+  description = "ARN of the OIDC provider to configure in oomol-connector."
   value       = alicloud_ims_oidc_provider.oomol.arn
 }

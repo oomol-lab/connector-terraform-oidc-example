@@ -8,9 +8,18 @@ terraform {
 }
 
 locals {
-  oidc_client_id  = "oomol-for-aliyun"
+  # Replace this with your own OOMOL OIDC client ID. Configure the same value in
+  # oomol-connector. It must match the token aud claim.
+  oidc_client_id = "replace-with-your-oomol-client-id"
+
+  # OOMOL's OIDC issuer URL. This value is fixed by OOMOL and normally should
+  # not be changed. It must match the token iss claim exactly.
   oidc_issuer_url = "https://api.oomol.com"
-  oidc_subject    = ""
+
+  # Replace this with your OOMOL user UUID. Do not leave it empty: without the
+  # sub check, anyone who can obtain a valid OOMOL token and knows this RAM role
+  # could try to assume the role.
+  oidc_subject = "replace-with-your-oomol-user-uuid"
 }
 
 data "external" "oomol_oidc_fingerprint" {
@@ -50,21 +59,21 @@ resource "alicloud_ram_role" "oomol_oidc" {
           ]
         }
         Condition = {
-          StringEquals = merge(
-            {
-              "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
-              "oidc:aud" = local.oidc_client_id
-            },
-            local.oidc_subject != "" ? {
-              "oidc:sub" = local.oidc_subject
-            } : {},
-          )
+          StringEquals = {
+            "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
+            "oidc:aud" = local.oidc_client_id
+            "oidc:sub" = local.oidc_subject
+          }
         }
       },
     ]
   })
 }
 
+# This policy is intentionally minimal. It only allows sts:GetCallerIdentity,
+# which OIDC-based credential retrieval tools commonly use to verify credentials.
+# Update this alicloud_ram_policy policy_document with the concrete Alibaba
+# Cloud permissions OOMOL should have in your deployment.
 resource "alicloud_ram_policy" "oomol_oidc" {
   policy_name = "oomol-oidc-policy"
   description = "Minimal policy for credentials assumed through the OOMOL OIDC role."
