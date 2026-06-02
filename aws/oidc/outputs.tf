@@ -8,17 +8,7 @@ output "role_arn" {
   value       = aws_iam_role.oomol_oidc.arn
 }
 
-output "oidc_issuer_url" {
-  description = "Issuer URL expected in the OOMOL OIDC token iss claim."
-  value       = var.oidc_issuer_url
-}
-
 output "audience" {
   description = "Audience expected in the OOMOL OIDC token aud claim."
   value       = var.audience
-}
-
-output "subject_patterns" {
-  description = "Subject patterns accepted for the OOMOL OIDC token sub claim."
-  value       = var.subject_patterns
 }

@@ -19,13 +19,6 @@ variable "oidc_issuer_url" {
 variable "audience" {
   description = "Allowed OIDC audience. This value must match the token aud claim."
   type        = string
-  default     = "replace-with-your-oomol-audience"
-}
-
-variable "thumbprint_list" {
-  description = "Optional HTTPS certificate thumbprints for the OIDC provider. Leave null to let AWS retrieve them."
-  type        = list(string)
-  default     = null
 }
 
 variable "role_name" {
@@ -37,7 +30,6 @@ variable "role_name" {
 variable "subject_patterns" {
   description = "Allowed OIDC sub claim values or patterns. Use exact OOMOL user UUIDs in production."
   type        = list(string)
-  default     = ["replace-with-your-oomol-user-uuid"]
 }
 
 variable "max_session_duration" {

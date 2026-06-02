@@ -5,7 +5,6 @@ locals {
 resource "aws_iam_openid_connect_provider" "oomol" {
   url             = var.oidc_issuer_url
   client_id_list  = [var.audience]
-  thumbprint_list = var.thumbprint_list
 
   tags = merge(var.tags, {
     Name = "oomol-oidc-provider"
