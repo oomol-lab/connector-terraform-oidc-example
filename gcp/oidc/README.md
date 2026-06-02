@@ -20,7 +20,6 @@ Values you must review:
 | Value | Replace it? | What to use |
 | --- | --- | --- |
 | `project_id` | Yes. | The Google Cloud project ID that owns the Workload Identity Pool and service account. |
-| `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
 | `oidc_issuer_uri` | No. | OOMOL's fixed issuer URI. It must match the token `iss` claim exactly. |
 | `subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
 | `service_account_id` | Usually no. | The Google service account ID to create for OOMOL impersonation. Change it only if you need a different account name. |
@@ -29,7 +28,6 @@ For example, create `terraform.tfvars`:
 
 ```hcl
 project_id = "replace-with-your-gcp-project-id"
-audience   = "replace-with-your-oomol-audience"
 subject    = "replace-with-your-oomol-user-uuid"
 ```
 
@@ -45,19 +43,18 @@ Do not leave `subject` as a placeholder. The service account binding must check
 the token `sub` claim; otherwise the provider can accept a broader set of OOMOL
 tokens than intended.
 
-After apply, put the Workload Identity Provider resource name and service
-account email into `oomol-connector` to finish the OIDC integration.
+After apply, put the Google STS audience and service account email into
+`oomol-connector` to finish the OIDC integration.
 
 Field mapping:
 
 | Terraform value or output | `oomol-connector` field |
 | --- | --- |
-| `audience` | Google Cloud OIDC `audience` |
-| `workload_identity_pool_provider_name` | Google Cloud STS audience provider resource. Prefix it with `//iam.googleapis.com/` when calling STS. |
+| `sts_audience` | Google Cloud audience / STS provider resource name |
 | `service_account_email` | Google service account email to impersonate |
 
 ```sh
-terraform output workload_identity_pool_provider_name
+terraform output sts_audience
 terraform output service_account_email
 ```
 
@@ -74,9 +71,8 @@ POST https://sts.googleapis.com/v1/token
 ```
 
 Use `urn:ietf:params:oauth:grant-type:token-exchange` as the grant type and the
-full provider resource name as the STS audience. This is the
-`workload_identity_pool_provider_name` output with the `//iam.googleapis.com/`
-prefix:
+full provider resource name as the STS audience. This is the `sts_audience`
+output:
 
 ```json
 {

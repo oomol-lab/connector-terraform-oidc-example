@@ -2,6 +2,11 @@ data "google_project" "current" {
   project_id = var.project_id
 }
 
+locals {
+  workload_identity_pool_provider_name = "projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${var.pool_id}/providers/${var.provider_id}"
+  sts_audience                         = "//iam.googleapis.com/${local.workload_identity_pool_provider_name}"
+}
+
 resource "google_iam_workload_identity_pool" "oomol" {
   project                   = var.project_id
   workload_identity_pool_id = var.pool_id
@@ -19,7 +24,7 @@ resource "google_iam_workload_identity_pool_provider" "oomol" {
 
   oidc {
     issuer_uri        = var.oidc_issuer_uri
-    allowed_audiences = [var.audience]
+    allowed_audiences = [local.sts_audience]
   }
 
   attribute_mapping = {

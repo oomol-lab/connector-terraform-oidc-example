@@ -8,6 +8,11 @@ output "workload_identity_pool_provider_name" {
   value       = google_iam_workload_identity_pool_provider.oomol.name
 }
 
+output "sts_audience" {
+  description = "Audience value for Google Cloud STS token exchange."
+  value       = local.sts_audience
+}
+
 output "service_account_email" {
   description = "Email of the service account that accepts OOMOL OIDC federation."
   value       = google_service_account.oomol_oidc.email
