@@ -7,3 +7,8 @@ output "oidcProviderArn" {
   description = "ARN of the OIDC provider to configure in oomol-connector."
   value       = alicloud_ims_oidc_provider.oomol.arn
 }
+
+output "audience" {
+  description = "Audience to configure in oomol-connector."
+  value       = local.audience
+}

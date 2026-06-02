@@ -63,6 +63,7 @@ Field mapping:
 | `roleArn` | `RoleARN` |
 
 ```sh
+terraform output audience
 terraform output roleArn
 terraform output oidcProviderArn
 ```
@@ -135,6 +136,7 @@ terraform apply
 | `roleArn` | `RoleARN` |
 
 ```sh
+terraform output audience
 terraform output roleArn
 terraform output oidcProviderArn
 ```
