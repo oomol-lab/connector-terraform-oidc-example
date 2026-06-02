@@ -65,13 +65,6 @@ Field mapping:
 terraform output role_arn
 ```
 
-The `oidc_provider_arn` output is the AWS IAM OIDC provider ARN created for the
-role trust policy. Do not put it into an Alibaba Cloud
-`AssumeRoleWithOIDC`/`OIDCProviderArn` setting: Alibaba Cloud expects a RAM OIDC
-provider ARN in the `acs:ram::...:oidc-provider/...` format, while this example
-creates an AWS IAM provider ARN in the `arn:aws:iam::...:oidc-provider/...`
-format.
-
 The role created here only defines who may assume it. Attach the concrete IAM
 permissions OOMOL needs in your deployment before using it for real workloads.
 

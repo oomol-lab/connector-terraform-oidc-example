@@ -21,7 +21,7 @@ Values you must review:
 | --- | --- | --- |
 | `project_id` | Yes. | The Google Cloud project ID that owns the Workload Identity Pool and service account. |
 | `oidc_issuer_uri` | No. | OOMOL's fixed issuer URI. It must match the token `iss` claim exactly. |
-| `audience` | Yes. | Your OOMOL OIDC audience. It must match the token `aud` claim. |
+| `audience` | Usually yes. | Your OOMOL OIDC audience. Leave it empty only when using the Google STS audience. |
 | `subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
 | `service_account_id` | Usually no. | The Google service account ID to create for OOMOL impersonation. Change it only if you need a different account name. |
 
@@ -41,11 +41,13 @@ terraform plan
 terraform apply
 ```
 
-Do not leave `audience` or `subject` as a placeholder. The provider checks the
-token `aud` claim, and the service account binding checks the token `sub` claim;
-otherwise the provider can accept a broader set of OOMOL tokens than intended.
+Do not leave `audience` or `subject` as a placeholder. If you do not have a
+custom OIDC audience, set `audience = ""`; Terraform will output the Google STS
+audience instead. The provider checks the token `aud` claim, and the service
+account binding checks the token `sub` claim; otherwise the provider can accept
+a broader set of OOMOL tokens than intended.
 
-After apply, put the OIDC audience and service account email into
+After apply, put the OIDC audience and service accounts into
 `oomol-connector` to finish the integration.
 
 Field mapping:
@@ -53,11 +55,13 @@ Field mapping:
 | Terraform value or output | `oomol-connector` field |
 | --- | --- |
 | `oidc_audience` | OIDC audience |
-| `service_account_email` | Google service account email to impersonate |
+| `service_accounts` | Service accounts |
+| `workload_identity_pool_provider_name` | Workload identity pool provider name |
 
 ```sh
 terraform output oidc_audience
-terraform output service_account_email
+terraform output service_accounts
+terraform output workload_identity_pool_provider_name
 ```
 
 The service account will still need project or resource-level IAM roles for the
