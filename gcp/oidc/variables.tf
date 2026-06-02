@@ -22,7 +22,7 @@ variable "oidc_issuer_uri" {
 }
 
 variable "audience" {
-  description = "Deprecated. The Google STS audience is derived from the Workload Identity Provider resource name."
+  description = "Allowed OIDC token audience. This must match the token aud claim."
   type        = string
   default     = "replace-with-your-oomol-audience"
 }
