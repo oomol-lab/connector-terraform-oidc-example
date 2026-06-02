@@ -8,18 +8,7 @@ terraform {
 }
 
 locals {
-  # Replace this with the OOMOL OIDC audience configured in oomol-connector.
-  # It must match the token aud claim.
-  audience = "replace-with-your-oomol-audience"
-
-  # OOMOL's OIDC issuer URL. This value is fixed by OOMOL and normally should
-  # not be changed. It must match the token iss claim exactly.
   oidc_issuer_url = "https://api.oomol.com"
-
-  # Replace this with your OOMOL user UUID. Do not leave it empty: without the
-  # sub check, anyone who can obtain a valid OOMOL token and knows this RAM role
-  # could try to assume the role.
-  oidc_subject = "replace-with-your-oomol-user-uuid"
 }
 
 data "external" "oomol_oidc_fingerprint" {
@@ -32,7 +21,7 @@ data "external" "oomol_oidc_fingerprint" {
 
 resource "alicloud_ims_oidc_provider" "oomol" {
   client_ids = [
-    local.audience,
+    var.audience,
   ]
   fingerprints = [
     data.external.oomol_oidc_fingerprint.result.fingerprint,
@@ -61,8 +50,8 @@ resource "alicloud_ram_role" "oomol_oidc" {
         Condition = {
           StringEquals = {
             "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
-            "oidc:aud" = local.audience
-            "oidc:sub" = local.oidc_subject
+            "oidc:aud" = var.audience
+            "oidc:sub" = var.oidc_subject
           }
         }
       },
@@ -75,23 +64,10 @@ resource "alicloud_ram_role" "oomol_oidc" {
 # Update this alicloud_ram_policy policy_document with the concrete Alibaba
 # Cloud permissions OOMOL should have in your deployment.
 resource "alicloud_ram_policy" "oomol_oidc" {
-  policy_name = "oomol-oidc-policy"
-  description = "Minimal policy for credentials assumed through the OOMOL OIDC role."
-
-  policy_document = jsonencode({
-    Version = "1"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "sts:GetCallerIdentity",
-        ]
-        Resource = [
-          "*",
-        ]
-      },
-    ]
-  })
+  policy_name     = "oomol-oidc-policy"
+  description     = "Minimal policy for credentials assumed through the OOMOL OIDC role."
+  rotate_strategy = "DeleteOldestNonDefaultVersionWhenLimitExceeded"
+  policy_document = jsonencode(var.policy_document)
 }
 
 resource "alicloud_ram_role_policy_attachment" "oomol_oidc" {

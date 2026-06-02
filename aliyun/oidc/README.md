@@ -14,23 +14,37 @@ It creates:
 
 ## Usage
 
-Before running Terraform, update the user-specific values in `oidc.tf`.
+Before running Terraform, set the user-specific variables in `terraform.tfvars`
+or pass them with `-var`.
 
 Values you must review:
 
 | Value | Replace it? | What to use |
 | --- | --- | --- |
 | `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
-| `oidc_issuer_url` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
+| `https://api.oomol.com` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
 | `oidc_subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
+| `policy_document` | Usually. | The concrete Alibaba Cloud permissions OOMOL needs in your deployment. |
 
-The Terraform file marks the same values in the `locals` block:
+Example `terraform.tfvars`:
 
 ```hcl
-locals {
-  audience        = "replace-with-your-oomol-audience"
-  oidc_issuer_url = "https://api.oomol.com"
-  oidc_subject    = "replace-with-your-oomol-user-uuid"
+audience     = "replace-with-your-oomol-audience"
+oidc_subject = "replace-with-your-oomol-user-uuid"
+
+policy_document = {
+  Version = "1"
+  Statement = [
+    {
+      Effect = "Allow"
+      Action = [
+        "sts:GetCallerIdentity",
+      ]
+      Resource = [
+        "*",
+      ]
+    },
+  ]
 }
 ```
 
@@ -40,7 +54,7 @@ could try to assume it.
 
 The included `alicloud_ram_policy` is intentionally minimal. It only allows
 `sts:GetCallerIdentity`, which is enough to verify that OIDC role assumption
-works. Update the `policy_document` with the concrete Alibaba Cloud permissions
+works. Override the `policy_document` variable with the concrete Alibaba Cloud permissions
 OOMOL needs in your deployment.
 
 Then run:
@@ -89,23 +103,37 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 
 ## 使用方式
 
-运行 Terraform 前，先修改 `oidc.tf` 里和用户环境相关的值。
+运行 Terraform 前，先在 `terraform.tfvars` 里设置和用户环境相关的变量，或者通过
+`-var` 传入。
 
 需要重点检查的值：
 
 | 值 | 是否需要替换 | 应该填什么 |
 | --- | --- | --- |
 | `audience` | 需要替换。 | `oomol-connector` 里配置的 OOMOL OIDC audience。它必须匹配 token 的 `aud` claim。 |
-| `oidc_issuer_url` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
+| `https://api.oomol.com` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
 | `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID，必须匹配 token 的 `sub` claim。 |
+| `policy_document` | 通常需要替换。 | OOMOL 在你的部署里需要的具体阿里云权限。 |
 
-Terraform 文件里同样在 `locals` 配置块标出了这些值：
+示例 `terraform.tfvars`：
 
 ```hcl
-locals {
-  audience        = "replace-with-your-oomol-audience"
-  oidc_issuer_url = "https://api.oomol.com"
-  oidc_subject    = "replace-with-your-oomol-user-uuid"
+audience     = "replace-with-your-oomol-audience"
+oidc_subject = "replace-with-your-oomol-user-uuid"
+
+policy_document = {
+  Version = "1"
+  Statement = [
+    {
+      Effect = "Allow"
+      Action = [
+        "sts:GetCallerIdentity",
+      ]
+      Resource = [
+        "*",
+      ]
+    },
+  ]
 }
 ```
 
@@ -114,7 +142,7 @@ locals {
 
 示例里的 `alicloud_ram_policy` 刻意保持最小权限，只允许
 `sts:GetCallerIdentity`，用于验证 OIDC AssumeRole 是否成功。实际部署时，需要根据
-你的使用场景填写 `policy_document`，授予 OOMOL 需要执行的具体阿里云权限。
+你的使用场景覆盖 `policy_document` 变量，授予 OOMOL 需要执行的具体阿里云权限。
 
 然后执行：
 

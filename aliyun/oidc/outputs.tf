@@ -10,5 +10,5 @@ output "oidcProviderArn" {
 
 output "audience" {
   description = "Audience to configure in oomol-connector."
-  value       = local.audience
+  value       = var.audience
 }
