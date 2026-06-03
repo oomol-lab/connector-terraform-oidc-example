@@ -28,8 +28,9 @@ variable "role_name" {
 }
 
 variable "subject_patterns" {
-  description = "Allowed OIDC sub claim values or patterns. Use exact OOMOL user UUIDs in production."
+  description = "Allowed OIDC sub claim values or patterns. Set an empty list to skip the sub claim restriction."
   type        = list(string)
+  default     = []
 }
 
 variable "max_session_duration" {

@@ -4,7 +4,7 @@ This example creates the AWS side of an OIDC federation setup for OOMOL:
 
 - an IAM OIDC provider for `https://token.oomol.com`
 - an IAM role that trusts tokens from that provider
-- trust policy conditions for `aud` and `sub`
+- trust policy conditions for `aud`, and optionally `sub`
 
 The AWS equivalent of Alibaba Cloud OIDC is:
 
@@ -21,7 +21,7 @@ Values you must review:
 | --- | --- | --- |
 | `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
 | `oidc_issuer_url` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
-| `subject_patterns` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. Use a list of UUIDs if more than one OOMOL user should be allowed. |
+| `subject_patterns` | Usually yes. | OOMOL user UUIDs or patterns that match the token `sub` claim. Use an empty list to skip the `sub` restriction. |
 | `thumbprint_list` | Usually no. | Leave `null` to let AWS retrieve the HTTPS thumbprint. Set it only if you need to pin explicit certificate thumbprints. |
 
 For example, create `terraform.tfvars`:
@@ -48,8 +48,9 @@ terraform plan \
 ```
 
 Do not leave `subject_patterns` as `["*"]` or any other broad wildcard in
-production. The IAM role must check the token `sub` claim; otherwise anyone who
-can obtain a valid OOMOL token and knows this role could try to assume it.
+production. If `subject_patterns` is empty, Terraform will omit the `sub`
+condition entirely, so anyone who can obtain a valid OOMOL token for the
+configured audience and knows this role could try to assume it.
 
 After apply, put the `role_arn` output into `oomol-connector` to finish the OIDC
 integration.

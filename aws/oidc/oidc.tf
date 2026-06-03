@@ -32,10 +32,14 @@ data "aws_iam_policy_document" "oomol_assume_role" {
       values   = [var.audience]
     }
 
-    condition {
-      test     = "StringLike"
-      variable = "${local.oidc_condition_key_prefix}:sub"
-      values   = var.subject_patterns
+    dynamic "condition" {
+      for_each = length(var.subject_patterns) == 0 ? [] : [var.subject_patterns]
+
+      content {
+        test     = "StringLike"
+        variable = "${local.oidc_condition_key_prefix}:sub"
+        values   = condition.value
+      }
     }
   }
 }
