@@ -9,6 +9,15 @@ terraform {
 
 locals {
   oidc_issuer_url = "https://api.oomol.com"
+  oidc_trust_conditions = merge(
+    {
+      "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
+      "oidc:aud" = var.audience
+    },
+    var.oidc_subject == "" ? {} : {
+      "oidc:sub" = var.oidc_subject
+    },
+  )
 }
 
 data "external" "oomol_oidc_fingerprint" {
@@ -48,11 +57,7 @@ resource "alicloud_ram_role" "oomol_oidc" {
           ]
         }
         Condition = {
-          StringEquals = {
-            "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url
-            "oidc:aud" = var.audience
-            "oidc:sub" = var.oidc_subject
-          }
+          StringEquals = local.oidc_trust_conditions
         }
       },
     ]

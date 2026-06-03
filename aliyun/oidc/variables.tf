@@ -16,7 +16,7 @@ variable "audience" {
 }
 
 variable "oidc_subject" {
-  description = "OOMOL user UUID from the OIDC sub claim allowed to assume the RAM role."
+  description = "OOMOL user UUID from the OIDC sub claim allowed to assume the RAM role. Set an explicit empty string to skip the sub condition."
   type        = string
 }
 

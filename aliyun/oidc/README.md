@@ -9,7 +9,7 @@ It creates:
 
 - an IMS OIDC provider for `https://api.oomol.com`
 - a RAM role that trusts tokens from that provider
-- trust policy conditions for `iss`, `aud`, and `sub`
+- trust policy conditions for `iss`, `aud`, and optionally `sub`
 - a minimal RAM policy that allows `sts:GetCallerIdentity`
 
 ## Usage
@@ -23,7 +23,7 @@ Values you must review:
 | --- | --- | --- |
 | `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
 | `https://api.oomol.com` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
-| `oidc_subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
+| `oidc_subject` | Yes. | Your OOMOL user UUID. When non-empty, it must match the token `sub` claim. Set it explicitly to `""` to omit the `sub` condition. |
 | `policy_document` | Usually. | The concrete Alibaba Cloud permissions OOMOL needs in your deployment. |
 
 Example `terraform.tfvars`:
@@ -48,9 +48,10 @@ policy_document = {
 }
 ```
 
-Do not leave `oidc_subject` empty. The RAM role must check the token `sub`
-claim, otherwise anyone who can obtain a valid OOMOL token and knows this role
-could try to assume it.
+For stricter trust policy matching, set `oidc_subject` to your OOMOL user UUID
+so the RAM role checks the token `sub` claim. If you explicitly set
+`oidc_subject = ""`, Terraform omits the `oidc:sub` condition from the role
+assume policy.
 
 The included `alicloud_ram_policy` is intentionally minimal. It only allows
 `sts:GetCallerIdentity`, which is enough to verify that OIDC role assumption
@@ -98,7 +99,7 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 
 - 指向 `https://api.oomol.com` 的 IMS OIDC Provider
 - 信任该 OIDC Provider token 的 RAM Role
-- 针对 `iss`、`aud` 和 `sub` 的信任策略条件
+- 针对 `iss`、`aud` 以及可选 `sub` 的信任策略条件
 - 一个只允许 `sts:GetCallerIdentity` 的最小 RAM Policy
 
 ## 使用方式
@@ -112,7 +113,7 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 | --- | --- | --- |
 | `audience` | 需要替换。 | `oomol-connector` 里配置的 OOMOL OIDC audience。它必须匹配 token 的 `aud` claim。 |
 | `https://api.oomol.com` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
-| `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID，必须匹配 token 的 `sub` claim。 |
+| `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID；非空时必须匹配 token 的 `sub` claim。显式设为 `""` 时不写入 `sub` 条件。 |
 | `policy_document` | 通常需要替换。 | OOMOL 在你的部署里需要的具体阿里云权限。 |
 
 示例 `terraform.tfvars`：
@@ -137,8 +138,9 @@ policy_document = {
 }
 ```
 
-不要让 `oidc_subject` 保持为空。RAM Role 必须校验 token 的 `sub` claim；否则只要
-有人能拿到有效的 OOMOL token，并且知道这个 role，就可能尝试伪造 AssumeRole。
+为了更严格地限制信任策略，建议把 `oidc_subject` 设为你的 OOMOL 用户 UUID，让
+RAM Role 校验 token 的 `sub` claim。如果显式设置 `oidc_subject = ""`，Terraform
+会从 role assume policy 里省略 `oidc:sub` 条件。
 
 示例里的 `alicloud_ram_policy` 刻意保持最小权限，只允许
 `sts:GetCallerIdentity`，用于验证 OIDC AssumeRole 是否成功。实际部署时，需要根据
