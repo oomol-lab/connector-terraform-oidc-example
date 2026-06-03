@@ -1,6 +1,6 @@
-profile    = "writer"
-audience     = "oomol-terraform-audience"
-oidc_subject = "replace-with-your-oomol-user-uuid"
+alicloud_profile = "writer"
+audience         = "oomol-terraform-audience"
+oidc_subject     = "replace-with-your-oomol-user-uuid"
 
 policy_document = {
   Version = "1"
