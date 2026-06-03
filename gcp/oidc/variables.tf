@@ -44,3 +44,17 @@ variable "service_account_display_name" {
   type        = string
   default     = "OOMOL OIDC service account"
 }
+
+variable "test_role_id" {
+  description = "Project custom role ID for the minimal OOMOL OIDC test permission role."
+  type        = string
+  default     = "oomol_oidc_project_viewer"
+}
+
+variable "test_role_permissions" {
+  description = "Permissions granted to the OOMOL OIDC service account for testing. Replace these with the concrete Google Cloud permissions OOMOL needs."
+  type        = list(string)
+  default = [
+    "resourcemanager.projects.get",
+  ]
+}

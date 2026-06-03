@@ -39,6 +39,12 @@ variable "max_session_duration" {
   default     = 3600
 }
 
+variable "policy_document" {
+  description = "Optional IAM policy document attached to the OOMOL OIDC role. Leave null to use the minimal iam:GetRole test policy, or replace it with the concrete AWS permissions OOMOL needs."
+  type        = any
+  default     = null
+}
+
 variable "tags" {
   description = "Tags applied to IAM resources."
   type        = map(string)

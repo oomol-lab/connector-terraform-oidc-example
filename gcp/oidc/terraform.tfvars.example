@@ -1,3 +1,7 @@
 project_id = "<GCP_PROJECT_ID>"
 audience   = "<AUDIENCE>"
 subject    = "<OOMOL_USER_ID>"
+
+test_role_permissions = [
+  "resourcemanager.projects.get",
+]

@@ -47,3 +47,20 @@ resource "google_service_account_iam_member" "oomol_oidc_workload_identity_user"
   role               = "roles/iam.workloadIdentityUser"
   member             = "principal://iam.googleapis.com/projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.oomol.workload_identity_pool_id}/subject/${var.subject}"
 }
+
+# This custom role is intentionally minimal. It only allows reading the current
+# project's metadata, which is enough to verify that the impersonated service
+# account received usable Google Cloud API permissions.
+resource "google_project_iam_custom_role" "oomol_oidc_test" {
+  project     = var.project_id
+  role_id     = var.test_role_id
+  title       = "OOMOL OIDC project metadata viewer"
+  description = "Minimal test role for credentials federated through the OOMOL OIDC service account."
+  permissions = var.test_role_permissions
+}
+
+resource "google_project_iam_member" "oomol_oidc_test" {
+  project = var.project_id
+  role    = google_project_iam_custom_role.oomol_oidc_test.name
+  member  = "serviceAccount:${google_service_account.oomol_oidc.email}"
+}

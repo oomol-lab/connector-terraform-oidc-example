@@ -10,6 +10,7 @@ This example creates:
 - an OIDC Workload Identity Pool Provider for `https://token.oomol.com`
 - a service account
 - a `roles/iam.workloadIdentityUser` binding for one OIDC `sub` value
+- a minimal project custom role that allows `resourcemanager.projects.get`
 
 ## Usage
 
@@ -24,6 +25,7 @@ Values you must review:
 | `audience` | Usually yes. | Your OOMOL OIDC audience. Leave it empty only when using the Google STS audience. |
 | `subject` | Yes. | Your OOMOL user UUID. It must match the token `sub` claim. |
 | `service_account_id` | Usually no. | The Google service account ID to create for OOMOL impersonation. Change it only if you need a different account name. |
+| `test_role_permissions` | Usually. | The concrete Google Cloud permissions OOMOL needs. Leave the default to use the minimal project metadata read test permission. |
 
 For example, create `terraform.tfvars`:
 
@@ -31,6 +33,10 @@ For example, create `terraform.tfvars`:
 project_id = "replace-with-your-gcp-project-id"
 audience   = "replace-with-your-oomol-audience"
 subject    = "replace-with-your-oomol-user-uuid"
+
+test_role_permissions = [
+  "resourcemanager.projects.get",
+]
 ```
 
 Then run:
@@ -46,6 +52,20 @@ custom OIDC audience, set `audience = ""`; Terraform will output the Google STS
 audience instead. The provider checks the token `aud` claim, and the service
 account binding checks the token `sub` claim; otherwise the provider can accept
 a broader set of OOMOL tokens than intended.
+
+The included project custom role is intentionally minimal. It only allows
+`resourcemanager.projects.get` on the current project, which is enough to verify
+that the impersonated service account has usable Google Cloud API permissions.
+Use the service account access token to verify the test permission:
+
+```sh
+curl \
+  -H "Authorization: Bearer <SERVICE_ACCOUNT_ACCESS_TOKEN>" \
+  "https://cloudresourcemanager.googleapis.com/v1/projects/<PROJECT_ID>"
+```
+
+Override `test_role_permissions` with the concrete Google Cloud permissions
+OOMOL needs for real workloads.
 
 After apply, put the OIDC audience and service accounts into
 `oomol-connector` to finish the integration.
@@ -108,7 +128,10 @@ Authorization: Bearer <STS_ACCESS_TOKEN>
 }
 ```
 
-Use the returned service account access token to call Google Cloud APIs.
+Use the returned service account access token to call Google Cloud APIs. This
+example grants that service account `resourcemanager.projects.get`, so the
+token can read the current project's metadata as a minimal end-to-end
+permission test.
 
 ## Reference documentation
 
@@ -117,3 +140,4 @@ Use the returned service account access token to call Google Cloud APIs.
 - [Google Cloud IAM: Service Account Credentials generateAccessToken](https://docs.cloud.google.com/iam/docs/reference/credentials/rest/v1/projects.serviceAccounts/generateAccessToken)
 - [Google Cloud IAM: Workload Identity Federation with deployment pipelines](https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines)
 - [Terraform Google provider: google_iam_workload_identity_pool_provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider)
+- [Terraform Google provider: google_project_iam_custom_role](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_custom_role)

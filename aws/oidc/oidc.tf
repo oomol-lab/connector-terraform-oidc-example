@@ -50,3 +50,27 @@ resource "aws_iam_role" "oomol_oidc" {
   max_session_duration = var.max_session_duration
   tags                 = var.tags
 }
+
+data "aws_iam_policy_document" "oomol_test_permissions" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "iam:GetRole",
+    ]
+
+    resources = [
+      aws_iam_role.oomol_oidc.arn,
+    ]
+  }
+}
+
+# This policy is intentionally minimal. It only allows the assumed role to read
+# its own IAM role metadata, which is enough to verify that OIDC role assumption
+# returned credentials with usable AWS API permissions. Replace policy_document
+# with the concrete AWS permissions OOMOL should have in your deployment.
+resource "aws_iam_role_policy" "oomol_oidc" {
+  name   = "${var.role_name}-policy"
+  role   = aws_iam_role.oomol_oidc.id
+  policy = var.policy_document == null ? data.aws_iam_policy_document.oomol_test_permissions.json : jsonencode(var.policy_document)
+}
