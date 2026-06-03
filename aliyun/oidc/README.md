@@ -26,11 +26,72 @@ Values you must review:
 | `oidc_subject` | Yes. | Your OOMOL user UUID. When non-empty, it must match the token `sub` claim. Set it explicitly to `""` to omit the `sub` condition. |
 | `policy_document` | Usually. | The concrete Alibaba Cloud permissions OOMOL needs in your deployment. |
 
+Alibaba Cloud Terraform supports selecting a local Alibaba Cloud CLI profile:
+
+```hcl
+provider "alicloud" {
+  region  = "cn-hangzhou"
+  profile = "customprofile"
+}
+```
+
+Create or select the profile with Alibaba Cloud CLI:
+
+```sh
+aliyun configure --profile customprofile --mode AK
+aliyun configure switch --profile customprofile
+```
+
+The RAM user or role behind this profile must be allowed to manage the RAM and
+IMS resources created by this example. For a scoped profile, attach a policy
+like this:
+
+```json
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ims:CreateOIDCProvider",
+        "ims:GetOIDCProvider",
+        "ims:UpdateOIDCProvider",
+        "ims:DeleteOIDCProvider",
+        "ram:CreateRole",
+        "ram:GetRole",
+        "ram:UpdateRole",
+        "ram:DeleteRole",
+        "ram:CreatePolicy",
+        "ram:GetPolicy",
+        "ram:ListPolicyVersions",
+        "ram:GetPolicyVersion",
+        "ram:DeletePolicy",
+        "ram:AttachPolicyToRole",
+        "ram:DetachPolicyFromRole",
+        "ram:ListPoliciesForRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+You can also use Alibaba Cloud's online Terraform platform instead of running
+Terraform locally:
+
+<https://api.aliyun.com/terraform?source=ResourceType&activeTab=code&providerVersion=1.279.0&sourcePath=VPC%2Falicloud_vpc>
+
+Paste this example's Terraform code into the online editor and run it with your
+Alibaba Cloud account there. In that flow, Alibaba Cloud handles the execution
+environment and account authentication, so you do not need a local CLI profile
+for the run.
+
 Example `terraform.tfvars`:
 
 ```hcl
-audience     = "replace-with-your-oomol-audience"
-oidc_subject = "replace-with-your-oomol-user-uuid"
+alicloud_profile = "customprofile"
+audience         = "replace-with-your-oomol-audience"
+oidc_subject     = "replace-with-your-oomol-user-uuid"
 
 policy_document = {
   Version = "1"
@@ -88,6 +149,8 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 
 ## Reference documentation
 
+- [Alibaba Cloud CLI: configure credentials](https://www.alibabacloud.com/help/doc-detail/121193.html)
+- [Alibaba Cloud Terraform Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
 - [Alibaba Cloud RAM: OIDC role-based SSO overview](https://www.alibabacloud.com/help/en/ram/overview-of-oidc-based-sso)
 - [Alibaba Cloud RAM API: AssumeRoleWithOIDC](https://www.alibabacloud.com/help/en/doc-detail/371866.html)
 
@@ -116,11 +179,68 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 | `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID；非空时必须匹配 token 的 `sub` claim。显式设为 `""` 时不写入 `sub` 条件。 |
 | `policy_document` | 通常需要替换。 | OOMOL 在你的部署里需要的具体阿里云权限。 |
 
+阿里云 Terraform 支持指定本地 Alibaba Cloud CLI profile：
+
+```hcl
+provider "alicloud" {
+  region  = "cn-hangzhou"
+  profile = "customprofile"
+}
+```
+
+可以先用阿里云 CLI 创建或切换 profile：
+
+```sh
+aliyun configure --profile customprofile --mode AK
+aliyun configure switch --profile customprofile
+```
+
+这个 profile 背后的 RAM 用户或角色需要有权限管理本示例创建的 RAM 和 IMS 资源。
+如果要给它配置一份收窄权限，可以附加类似下面的 RAM Policy：
+
+```json
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ims:CreateOIDCProvider",
+        "ims:GetOIDCProvider",
+        "ims:UpdateOIDCProvider",
+        "ims:DeleteOIDCProvider",
+        "ram:CreateRole",
+        "ram:GetRole",
+        "ram:UpdateRole",
+        "ram:DeleteRole",
+        "ram:CreatePolicy",
+        "ram:GetPolicy",
+        "ram:ListPolicyVersions",
+        "ram:GetPolicyVersion",
+        "ram:DeletePolicy",
+        "ram:AttachPolicyToRole",
+        "ram:DetachPolicyFromRole",
+        "ram:ListPoliciesForRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+也可以不在本地运行 Terraform，改用阿里云 Terraform 在线平台：
+
+<https://api.aliyun.com/terraform?source=ResourceType&activeTab=code&providerVersion=1.279.0&sourcePath=VPC%2Falicloud_vpc>
+
+把本示例里的 Terraform 代码贴到在线编辑器中，并在阿里云账号环境里执行。这个流程由
+阿里云提供执行环境和账号认证，因此运行时不需要配置本地 CLI profile。
+
 示例 `terraform.tfvars`：
 
 ```hcl
-audience     = "replace-with-your-oomol-audience"
-oidc_subject = "replace-with-your-oomol-user-uuid"
+alicloud_profile = "customprofile"
+audience         = "replace-with-your-oomol-audience"
+oidc_subject     = "replace-with-your-oomol-user-uuid"
 
 policy_document = {
   Version = "1"
@@ -176,5 +296,7 @@ provider 默认使用 `cn-hangzhou` 区域。如果需要其他区域或本地 C
 
 ## 参考文档
 
+- [阿里云 CLI：配置凭证](https://www.alibabacloud.com/help/doc-detail/121193.html)
+- [阿里云 Terraform Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
 - [阿里云 RAM：OIDC 角色 SSO 概览](https://www.alibabacloud.com/help/en/ram/overview-of-oidc-based-sso)
 - [阿里云 RAM API：AssumeRoleWithOIDC](https://www.alibabacloud.com/help/en/doc-detail/371866.html)
