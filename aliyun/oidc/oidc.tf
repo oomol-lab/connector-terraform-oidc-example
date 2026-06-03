@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  oidc_issuer_url = "https://api.oomol.com"
+  oidc_issuer_url = "https://token.oomol.com"
   oidc_trust_conditions = merge(
     {
       "oidc:iss" = alicloud_ims_oidc_provider.oomol.issuer_url

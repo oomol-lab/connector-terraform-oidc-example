@@ -7,7 +7,7 @@ account key.
 This example creates:
 
 - a Workload Identity Pool
-- an OIDC Workload Identity Pool Provider for `https://api.oomol.com`
+- an OIDC Workload Identity Pool Provider for `https://token.oomol.com`
 - a service account
 - a `roles/iam.workloadIdentityUser` binding for one OIDC `sub` value
 

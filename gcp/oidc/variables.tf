@@ -18,7 +18,7 @@ variable "provider_id" {
 variable "oidc_issuer_uri" {
   description = "OIDC issuer URI. This must exactly match the token iss claim."
   type        = string
-  default     = "https://api.oomol.com"
+  default     = "https://token.oomol.com"
 }
 
 variable "audience" {

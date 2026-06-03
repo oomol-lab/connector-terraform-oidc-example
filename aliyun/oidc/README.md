@@ -7,7 +7,7 @@ OOMOL.
 
 It creates:
 
-- an IMS OIDC provider for `https://api.oomol.com`
+- an IMS OIDC provider for `https://token.oomol.com`
 - a RAM role that trusts tokens from that provider
 - trust policy conditions for `iss`, `aud`, and optionally `sub`
 - a minimal RAM policy that allows `sts:GetCallerIdentity`
@@ -22,7 +22,7 @@ Values you must review:
 | Value | Replace it? | What to use |
 | --- | --- | --- |
 | `audience` | Yes. | The OOMOL OIDC audience configured in `oomol-connector`. It must match the token `aud` claim. |
-| `https://api.oomol.com` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
+| `https://token.oomol.com` | No. | OOMOL's fixed issuer URL. It must match the token `iss` claim exactly. |
 | `oidc_subject` | Yes. | Your OOMOL user UUID. When non-empty, it must match the token `sub` claim. Set it explicitly to `""` to omit the `sub` condition. |
 | `policy_document` | Usually. | The concrete Alibaba Cloud permissions OOMOL needs in your deployment. |
 
@@ -160,7 +160,7 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 
 创建内容包括：
 
-- 指向 `https://api.oomol.com` 的 IMS OIDC Provider
+- 指向 `https://token.oomol.com` 的 IMS OIDC Provider
 - 信任该 OIDC Provider token 的 RAM Role
 - 针对 `iss`、`aud` 以及可选 `sub` 的信任策略条件
 - 一个只允许 `sts:GetCallerIdentity` 的最小 RAM Policy
@@ -175,7 +175,7 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 | 值 | 是否需要替换 | 应该填什么 |
 | --- | --- | --- |
 | `audience` | 需要替换。 | `oomol-connector` 里配置的 OOMOL OIDC audience。它必须匹配 token 的 `aud` claim。 |
-| `https://api.oomol.com` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
+| `https://token.oomol.com` | 不需要替换。 | OOMOL 固定的 issuer URL，必须和 token 的 `iss` claim 完全一致。 |
 | `oidc_subject` | 需要替换。 | 你的 OOMOL 用户 UUID；非空时必须匹配 token 的 `sub` claim。显式设为 `""` 时不写入 `sub` 条件。 |
 | `policy_document` | 通常需要替换。 | OOMOL 在你的部署里需要的具体阿里云权限。 |
 

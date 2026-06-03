@@ -2,7 +2,7 @@
 
 This example creates the AWS side of an OIDC federation setup for OOMOL:
 
-- an IAM OIDC provider for `https://api.oomol.com`
+- an IAM OIDC provider for `https://token.oomol.com`
 - an IAM role that trusts tokens from that provider
 - trust policy conditions for `aud` and `sub`
 

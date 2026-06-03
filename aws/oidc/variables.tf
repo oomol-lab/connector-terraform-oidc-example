@@ -13,7 +13,7 @@ variable "aws_profile" {
 variable "oidc_issuer_url" {
   description = "OIDC issuer URL. This must exactly match the token iss claim and AWS OIDC provider URL."
   type        = string
-  default     = "https://api.oomol.com"
+  default     = "https://token.oomol.com"
 }
 
 variable "audience" {
