@@ -1,0 +1,3 @@
+project_id = "<GCP_PROJECT_ID>"
+audience   = "<AUDIENCE>"
+subject    = "<OOMOL_USER_ID>"

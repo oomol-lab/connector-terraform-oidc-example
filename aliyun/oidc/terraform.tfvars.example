@@ -1,0 +1,18 @@
+profile    = "writer"
+audience     = "oomol-terraform-audience"
+oidc_subject = "replace-with-your-oomol-user-uuid"
+
+policy_document = {
+  Version = "1"
+  Statement = [
+    {
+      Effect = "Allow"
+      Action = [
+        "sts:GetCallerIdentity",
+      ]
+      Resource = [
+        "*",
+      ]
+    },
+  ]
+}

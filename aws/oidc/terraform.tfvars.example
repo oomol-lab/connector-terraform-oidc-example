@@ -1,0 +1,3 @@
+audience         = "<AUDIENCE>"
+role_name        = "<ROLE_NAME>"
+subject_patterns = []
