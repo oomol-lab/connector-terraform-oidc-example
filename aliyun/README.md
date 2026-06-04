@@ -17,6 +17,12 @@ It creates:
 Before running Terraform, install and configure Alibaba Cloud CLI, and then
 update the user-specific values in `oidc.tf`.
 
+This directory already includes a `terraform.tfvars.example` template. Rename
+it to `terraform.tfvars` and update the values you need. Terraform loads
+`terraform.tfvars` from the current working directory automatically, so the
+variables in that file take effect for `terraform plan` and `terraform apply`
+without extra `-var` flags.
+
 ### 1. Install and configure Alibaba Cloud CLI
 
 On macOS, you can install the CLI with Homebrew:
@@ -176,7 +182,8 @@ Alibaba Cloud account there. In that flow, Alibaba Cloud handles the execution
 environment and account authentication, so you do not need a local CLI profile
 for the run.
 
-Example `terraform.tfvars`:
+The included `terraform.tfvars.example` looks like this after you rename it to
+`terraform.tfvars` and fill in your values:
 
 ```hcl
 alicloud_profile = "customprofile"
@@ -262,6 +269,11 @@ The provider defaults to `cn-hangzhou`. Override `alicloud_region` and
 ## 使用方式
 
 运行 Terraform 前，先安装并配置阿里云 CLI，再修改 `oidc.tf` 里和用户环境相关的值。
+
+这个目录已经自带 `terraform.tfvars.example` 模板。把它改名为
+`terraform.tfvars` 后，再把里面的值改成你自己的即可。Terraform 会自动加载当前目
+录下的 `terraform.tfvars`，所以文件里的变量会在 `terraform plan` 和
+`terraform apply` 时直接生效，不需要额外再写 `-var`。
 
 ### 1. 安装并配置阿里云 CLI
 

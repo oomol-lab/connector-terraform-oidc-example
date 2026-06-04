@@ -17,6 +17,12 @@ The AWS equivalent of Alibaba Cloud OIDC is:
 
 Before running Terraform, update the user-specific values.
 
+This directory already includes a `terraform.tfvars.example` template. Rename
+it to `terraform.tfvars` and edit the values you need. Terraform loads
+`terraform.tfvars` from the current working directory automatically, so the
+variables in that file take effect for `terraform plan` and `terraform apply`
+without extra `-var` flags.
+
 Values you must review:
 
 | Value | Replace it? | What to use |
@@ -26,7 +32,8 @@ Values you must review:
 | `subject_patterns` | Usually yes. | OOMOL user UUIDs or patterns that match the token `sub` claim. Use an empty list to skip the `sub` restriction. |
 | `policy_document` | Usually. | The concrete AWS permissions OOMOL needs in your deployment. Leave it unset to use the minimal `iam:GetRole` test policy. |
 
-For example, create `terraform.tfvars`:
+The included `terraform.tfvars.example` looks like this after you rename it to
+`terraform.tfvars` and fill in your values:
 
 ```hcl
 audience         = "replace-with-your-oomol-audience"

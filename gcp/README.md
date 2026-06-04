@@ -16,6 +16,12 @@ This example creates:
 
 Before running Terraform, update the user-specific values.
 
+This directory already includes a `terraform.tfvars.example` template. Rename
+it to `terraform.tfvars` and edit the values you need. Terraform loads
+`terraform.tfvars` from the current working directory automatically, so the
+variables in that file take effect for `terraform plan` and `terraform apply`
+without extra `-var` flags.
+
 Values you must review:
 
 | Value | Replace it? | What to use |
@@ -27,7 +33,8 @@ Values you must review:
 | `service_account_id` | Usually no. | The Google service account ID to create for OOMOL impersonation. Change it only if you need a different account name. |
 | `test_role_permissions` | Usually. | The concrete Google Cloud permissions OOMOL needs. Leave the default to use the minimal project metadata read test permission. |
 
-For example, create `terraform.tfvars`:
+The included `terraform.tfvars.example` looks like this after you rename it to
+`terraform.tfvars` and fill in your values:
 
 ```hcl
 project_id = "replace-with-your-gcp-project-id"
